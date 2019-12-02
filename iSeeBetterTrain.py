@@ -190,7 +190,6 @@ def trainModel(epoch):
         runningResults['DScore'] += realOut.item() * args.batchSize
         runningResults['GScore'] += fake_out.item() * args.batchSize
 
-        import pdb; pdb.set_trace()
         trainBar.set_description(desc='[Epoch: %d/%d] D Loss: %.4f G Loss: %.4f D(x): %.4f D(G(z)): %.4f' %
                                        (epoch, args.nEpochs, runningResults['DLoss'] / runningResults['batchSize'],
                                        runningResults['GLoss'] / runningResults['batchSize'],
