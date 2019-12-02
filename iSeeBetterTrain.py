@@ -119,11 +119,20 @@ def trainModel(epoch):
         netD.zero_grad()
 
         #import pdb; pdb.set_trace()
-        input, target, neigbor, flow, bicubic = data[0], data[1], data[2], data[3], data[4]
-        input = Variable(input).to(device=device, dtype=torch.float)
-        bicubic = Variable(bicubic).to(device=device, dtype=torch.float)
-        neigbor = [Variable(j).to(device=device, dtype=torch.float) for j in neigbor]
-        flow = [Variable(j).to(device=device, dtype=torch.float) for j in flow]
+        data.to(device)
+
+        if args.gpu_mode and torch.cuda.is_available():
+            input = Variable(input).cuda()
+            target = Variable(target).cuda()
+            bicubic = Variable(bicubic).cuda()
+            neigbor = [Variable(j).cuda() for j in neigbor]
+            flow = [Variable(j).cuda().float() for j in flow]
+        else:
+            input, target, neigbor, flow, bicubic = data[0], data[1], data[2], data[3], data[4]
+            input = Variable(input).to(device=device, dtype=torch.float)
+            bicubic = Variable(bicubic).to(device=device, dtype=torch.float)
+            neigbor = [Variable(j).to(device=device, dtype=torch.float) for j in neigbor]
+            flow = [Variable(j).to(device=device, dtype=torch.float) for j in flow]
 
         #HRImg = HRImg.to(device)
         #LRImg = LRImg.to(device)
