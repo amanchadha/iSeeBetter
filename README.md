@@ -46,7 +46,7 @@ Model trained for N epochs included under ```weights/```
 
 # Training 
 
-Train the model using (takes roughly 2 hours per epoch with a batch size of 2 on an NVIDIA Tesla V100):
+Train the model using (takes roughly 1.5 hours per epoch with a batch size of 2 on an NVIDIA Tesla V100):
 
 ```python iSeeBetterTrain.py```
 
