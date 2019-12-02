@@ -1,0 +1,3 @@
+foliage/001.png
+foliage/002.png
+foliage/003.png
