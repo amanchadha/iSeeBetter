@@ -25,7 +25,7 @@ parser.add_argument('--start_epoch', type=int, default=1, help='Starting epoch f
 parser.add_argument('--nEpochs', type=int, default=150, help='number of epochs to train for')
 parser.add_argument('--snapshots', type=int, default=1, help='Snapshots')
 parser.add_argument('--lr', type=float, default=1e-4, help='Learning Rate. Default=0.01')
-parser.add_argument('--gpu_mode', type=bool, default=False)
+parser.add_argument('--gpu_mode', type=bool, default=True)
 parser.add_argument('--threads', type=int, default=8, help='number of threads for data loader to use')
 parser.add_argument('--seed', type=int, default=123, help='random seed to use. Default=123')
 parser.add_argument('--gpus', default=8, type=int, help='number of gpu')
@@ -55,18 +55,22 @@ training_data_loader = DataLoader(dataset=train_set, num_workers=args.threads, b
 # Initialize Logger
 logger.initLogger(args.debug)
 
-# Use Generator as RBPN
+# Use generator as RBPN
 netG = RBPN(num_channels=3, base_filter=256,  feat = 64, num_stages=3, n_resblock=5, nFrames=args.nFrames, scale_factor=args.upscale_factor)
 print('# of Generator parameters:', sum(param.numel() for param in netG.parameters()))
 
-# Use Discriminator from SRGAN
+# Use discriminator from SRGAN
 netD = Discriminator()
 print('# of Discriminator parameters:', sum(param.numel() for param in netD.parameters()))
 
+# Generator loss
 #generatorCriterion = GeneratorLoss()
 generatorCriterion = nn.L1Loss()
 
-if torch.cuda.is_available():
+# Specify device
+device = torch.device("cuda:0" if torch.cuda.is_available() and args.gpu_mode else "cpu")
+
+if args.gpu_mode and torch.cuda.is_available():
     def printCUDAStats():
         logger.info("# of CUDA devices detected: %s", torch.cuda.device_count())
         logger.info("Using CUDA device #: %s", torch.cuda.current_device())
@@ -76,9 +80,11 @@ if torch.cuda.is_available():
 
     netG.cuda()
     netD.cuda()
-    generatorCriterion.cuda()
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    netG.to(device)
+    netD.to(device)
+
+    generatorCriterion.cuda()
 
 # Use Adam optimizer
 optimizerG = optim.Adam(netG.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-8)
