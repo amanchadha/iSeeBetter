@@ -14,7 +14,7 @@ scikit-image==0.15.0
 tqdm==4.37.0
 ```
 
-Also needed is ```[Pyflow](https://github.com/pathak22/pyflow)``` which is a Python wrapper for [Ce Liu's C++ implementation](https://people.csail.mit.edu/celiu/OpticalFlow/) of Coarse2Fine Optical Flow.
+Also needed is [Pyflow](https://github.com/pathak22/pyflow) which is a Python wrapper for [Ce Liu's C++ implementation](https://people.csail.mit.edu/celiu/OpticalFlow/) of Coarse2Fine Optical Flow.
 Pyflow binaries have been built for ubuntu and macOS and are available in the repository.
 
 To load,
@@ -32,7 +32,7 @@ Figure 2: Network architecture
 
 ## Dataset
 
-To evaluate our proposed model, we used the [Vimeo90K](http://data.csail.mit.edu/tofu/testset/vimeo_test_clean.zip) dataset collected in the TOFlow project of MIT CSAIL which contains around 90,000 7-frame HR sequences with a fixed resolution, extracted from 39K video clips from Vimeo.com. When training our models, we generate the corresponding LR frame for each HR input frame by performing 4x down-sampling. To extend our dataset further, we have also built a video-to-frames tool to collect more data for testing from YouTube. 
+To train and evaluate our proposed model, we used the [Vimeo90K](http://data.csail.mit.edu/tofu/dataset/vimeo_septuplet.zip) dataset collected in the TOFlow project of MIT CSAIL which contains around 90,000 7-frame HR sequences with a fixed resolution (448 x 256), extracted from 39K video clips from Vimeo.com. When training our models, we generate the corresponding LR frame for each HR input frame by performing 4x down-sampling. To extend our dataset further, we have also built a video-to-frames tool to collect more data from YouTube, augmenting our dataset to roughly 47K clips. Our training/validation/test split was 80%/10%/10%.
 
 ## Results
 
