@@ -236,22 +236,18 @@ def main():
     if args.pretrained:
         model_name = os.path.join(args.save_folder + args.pretrained_sr)
         if os.path.exists(model_name):
-            if args.gpu_mode and torch.cuda.is_available():
-                state_dict = torch.load(model_name)
-                netG.load_state_dict(state_dict)
-            else:
-                # original saved file with DataParallel
-                state_dict = torch.load(model_name, map_location=torch.device('cpu'))
+            # original saved file with DataParallel
+            state_dict = torch.load(model_name, map_location=torch.device('cpu'))
 
-                # create new OrderedDict that does not contain module.
-                from collections import OrderedDict
-                new_state_dict = OrderedDict()
-                for k, v in state_dict.items():
-                    name = k[7:]  # remove module.
-                    new_state_dict[name] = v
+            # create new OrderedDict that does not contain module.
+            from collections import OrderedDict
+            new_state_dict = OrderedDict()
+            for k, v in state_dict.items():
+                name = k[7:]  # remove module.
+                new_state_dict[name] = v
 
-                # load params
-                netG.load_state_dict(new_state_dict)
+            # load params
+            netG.load_state_dict(new_state_dict)
 
             print('Pre-trained SR model loaded from:', model_name)
         else:
