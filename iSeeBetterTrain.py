@@ -13,6 +13,7 @@ from SRGAN.model import Discriminator
 import torch.nn as nn
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
+import utils
 
 ################################################## iSEEBETTER TRAINER KNOBS #############################################
 UPSCALE_FACTOR = 4
@@ -233,24 +234,8 @@ def main():
     """ Lets begin the training process! """
 
     if args.pretrained:
-        model_name = os.path.join(args.save_folder + args.pretrained_sr)
-        if os.path.exists(model_name):
-            # original saved file with DataParallel
-            state_dict = torch.load(model_name, map_location=torch.device('cpu'))
-
-            # create new OrderedDict that does not contain module.
-            from collections import OrderedDict
-            new_state_dict = OrderedDict()
-            for k, v in state_dict.items():
-                name = k[7:]  # remove module.
-                new_state_dict[name] = v
-
-            # load params
-            netG.load_state_dict(new_state_dict)
-
-            print('Pre-trained SR model loaded from:', model_name)
-        else:
-            print('Couldn\'t find pre-trained SR model at:', model_name)
+        modelPath = os.path.join(args.save_folder + args.pretrained_sr)
+        utils.loadPreTrainedModel(gpuMode=args.gpu_mode, model=netG, modelPath=modelPath)
 
     for epoch in range(args.start_epoch, args.nEpochs + 1):
         runningResults = trainModel(epoch)

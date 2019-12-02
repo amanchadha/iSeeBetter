@@ -11,7 +11,7 @@ from rbpn import Net as RBPN
 from data import get_test_set
 from functools import reduce
 import numpy as np
-
+import utils
 from scipy.misc import imsave
 import scipy.io as sio
 import time
@@ -36,8 +36,8 @@ parser.add_argument('--nFrames', type=int, default=7)
 parser.add_argument('--model_type', type=str, default='RBPN')
 parser.add_argument('--residual', type=bool, default=False)
 parser.add_argument('--output', default='Results/', help='Location to save checkpoint models')
-parser.add_argument('--model', default='weights/RBPN_4x.pth', help='sr pretrained base model')
-#parser.add_argument('--model', default='weights/RBPN_4x_F11_NTIRE2019.pth', help='sr pretrained base model')
+parser.add_argument('--model', default='weights/netG_epoch_4_1.pth', help='sr pretrained base model')
+# parser.add_argument('--model', default='weights/RBPN_4x.pth', help='sr pretrained base model')
 
 opt = parser.parse_args()
 
@@ -67,40 +67,16 @@ if cuda:
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-def loadModel():
-    model_name = os.path.join(opt.model)
-    if os.path.exists(model_name):
-        if opt.gpu_mode and torch.cuda.is_available():
-            state_dict = torch.load(model_name)
-            model.load_state_dict(state_dict)
-        else:
-            # original saved file with DataParallel
-            state_dict = torch.load(model_name, map_location=torch.device('cpu'))
-
-            # create new OrderedDict that does not contain module.
-            from collections import OrderedDict
-
-            new_state_dict = OrderedDict()
-            for k, v in state_dict.items():
-                name = k[7:]  # remove module.
-                new_state_dict[name] = v
-
-            # load params
-            model.load_state_dict(new_state_dict)
-
-        print('Pre-trained SR model loaded from:', model_name)
-    else:
-        print('Couldn\'t find pre-trained SR model at:', model_name)
-
 if cuda:
     model = model.cuda(gpus_list[0])
 
 def eval():
     # load model
-    loadModel()
+    modelPath = os.path.join(opt.model)
+    utils.loadPreTrainedModel(gpuMode=opt.gpu_mode, model=model, modelPath=modelPath)
 
     model.eval()
-    count=1
+    count = 0
     avg_psnr_predicted = 0.0
     for batch in testing_data_loader:
         input, target, neigbor, flow, bicubic = batch[0], batch[1], batch[2], batch[3], batch[4]
@@ -141,11 +117,11 @@ def eval():
         target = target*255.
                 
         psnr_predicted = PSNR(prediction, target, shave_border=opt.upscale_factor)
-        print("PSNR Predicted=", psnr_predicted)
+        print("PSNR Predicted = ", psnr_predicted)
         avg_psnr_predicted += psnr_predicted
-        count+=1
+        count += 1
     
-    print("Avg PSNR Predicted=", avg_psnr_predicted/count)
+    print("Avg PSNR Predicted = ", avg_psnr_predicted/count)
 
 def save_img(img, img_name, pred_flag):
     save_img = img.squeeze().clamp(0, 1).numpy().transpose(1,2,0)
