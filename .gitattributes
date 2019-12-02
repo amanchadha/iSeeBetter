@@ -1,2 +1,1 @@
-* linguist-vendored
-pyflow/ linguist-vendored=false
+pyflow/* linguist-vendored
