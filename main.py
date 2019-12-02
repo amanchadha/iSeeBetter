@@ -10,6 +10,7 @@ import torch.backends.cudnn as cudnn
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from rbpn import Net as RBPN
+from rbpn import GeneratorLoss
 from data import get_training_set, get_eval_set
 import socket
 import time
@@ -36,8 +37,8 @@ parser.add_argument('--patch_size', type=int, default=64, help='0 to use origina
 parser.add_argument('--data_augmentation', type=bool, default=True)
 parser.add_argument('--model_type', type=str, default='RBPN')
 parser.add_argument('--residual', type=bool, default=False)
-parser.add_argument('--pretrained_sr', default='3x_dl10VDBPNF7_epoch_84.pth', help='sr pretrained base model')
-#parser.add_argument('--pretrained_sr', default='RBPN_4x_F11_NTIRE2019.pth', help='sr pretrained base model')
+#parser.add_argument('--pretrained_sr', default='3x_dl10VDBPNF7_epoch_84.pth', help='sr pretrained base model')
+parser.add_argument('--pretrained_sr', default='RBPN_4x_F11_NTIRE2019.pth', help='sr pretrained base model')
 parser.add_argument('--pretrained', type=bool, default=False)
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
 parser.add_argument('--prefix', default='F7', help='Location to save checkpoint models')

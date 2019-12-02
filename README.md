@@ -2,7 +2,7 @@
 
 Project for Stanford CS230: Deep Learning
 
-```Python3 | PyTorch | GANs | RNNs```
+```Python3 | PyTorch | GANs | CNNs | ResNets | RNNs```
 
 ## Required Packages
 
@@ -16,6 +16,7 @@ tqdm==4.37.0
 
 Also needed is [Pyflow](https://github.com/pathak22/pyflow) which is a Python wrapper for [Ce Liu's C++ implementation](https://people.csail.mit.edu/celiu/OpticalFlow/) of Coarse2Fine Optical Flow.
 Pyflow binaries have been built for ubuntu and macOS and are available in the repository.
+If you need to rebuild Pyflow, follow the instructions on the [Pyflow Git](https://github.com/pathak22/pyflow) and do a ```cp pyflow*.so ..``` once you have built a shared object file on your target machine.
 
 To load,
 ```pip3 install -r requirements.txt```

@@ -1,5 +1,6 @@
 import argparse
 import gc
+import os
 import pandas as pd
 import torch.optim as optim
 import torch.utils.data
@@ -7,6 +8,7 @@ from tqdm import tqdm
 from data import get_training_set
 import logger
 from rbpn import Net as RBPN
+from rbpn import GeneratorLoss
 from SRGAN.model import Discriminator
 import torch.nn as nn
 from torch.autograd import Variable
@@ -38,10 +40,11 @@ parser.add_argument('--patch_size', type=int, default=64, help='0 to use origina
 parser.add_argument('--data_augmentation', type=bool, default=True)
 parser.add_argument('--model_type', type=str, default='RBPN')
 parser.add_argument('--residual', type=bool, default=False)
-parser.add_argument('--pretrained_sr', default='3x_dl10VDBPNF7_epoch_84.pth', help='sr pretrained base model')
-parser.add_argument('--pretrained', type=bool, default=False)
+parser.add_argument('--pretrained_sr', default='RBPN_4x.pth', help='sr pretrained base model')
+parser.add_argument('--pretrained', action='store_true')
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
 parser.add_argument('--prefix', default='F7', help='Location to save checkpoint models')
+parser.add_argument('--useL1Loss', action='store_true')
 parser.add_argument('-v', '--debug', default=False, action='store_true', help='Print debug spew.')
 
 args = parser.parse_args()
@@ -64,8 +67,7 @@ netD = Discriminator()
 print('# of Discriminator parameters:', sum(param.numel() for param in netD.parameters()))
 
 # Generator loss
-#generatorCriterion = GeneratorLoss()
-generatorCriterion = nn.L1Loss()
+generatorCriterion = nn.L1Loss() if args.useL1Loss else GeneratorLoss()
 
 # Specify device
 device = torch.device("cuda:0" if torch.cuda.is_available() and args.gpu_mode else "cpu")
@@ -109,16 +111,15 @@ def trainModel(epoch):
         ################################################################################################################
         # (1) Update D network: maximize D(x)-1-D(G(z))
         ################################################################################################################
-        # fakeHRs = []
-        # fakeLRs = []
+        if not args.useL1Loss:
+            fakeHRs = []
+            fakeLRs = []
         fakeScrs = []
         realScrs = []
         DLoss = 0
 
         # Zero-out gradients, i.e., start afresh
         netD.zero_grad()
-
-        #import pdb; pdb.set_trace()
 
         input, target, neigbor, flow, bicubic = data[0], data[1], data[2], data[3], data[4]
         if args.gpu_mode and torch.cuda.is_available():
@@ -133,21 +134,17 @@ def trainModel(epoch):
             neigbor = [Variable(j).to(device=device, dtype=torch.float) for j in neigbor]
             flow = [Variable(j).to(device=device, dtype=torch.float) for j in flow]
 
-        #HRImg = HRImg.to(device)
-        #LRImg = LRImg.to(device)
-
         fakeHR = netG(input, neigbor, flow)
         if args.residual:
             fakeHR = fakeHR + bicubic
 
-        #import pdb; pdb.set_trace()
         realOut = netD(target).mean()
         fake_out = netD(fakeHR).mean()
 
-        # fakeHRs.append(fakeHR)
-        # fakeLRs.append(fakeLR)
-        # fakeScrs.append(fake_out)
-        # realScrs.append(realOut)
+        if not args.useL1Loss:
+            fakeHRs.append(fakeHR)
+        fakeScrs.append(fake_out)
+        realScrs.append(realOut)
 
         DLoss += 1 - realOut + fake_out
 
@@ -167,19 +164,17 @@ def trainModel(epoch):
         # Zero-out gradients, i.e., start afresh
         netG.zero_grad()
 
-        #idx = 0
-        # for fakeHR, fakeLR, fake_scr, HRImg, LRImg in zip(fakeHRs, fakeLRs, fakeScrs, target, data):
-        #     fakeHR = fakeHR.to(device)
-        #     fakeLR = fakeLR.to(device)
-        #     fake_scr = fake_scr.to(device)
-        #     HRImg = HRImg.to(device)
-        #     LRImg = LRImg.to(device)
-        #     GLoss += generatorCriterion(fake_scr, fakeHR, HRImg, fakeLR, LRImg, idx)
-        #     idx += 1
+        if not args.useL1Loss:
+            idx = 0
+            for fakeHR, fake_scr, HRImg, LRImg in zip(fakeHRs, fakeScrs, target, data):
+                fakeHR = fakeHR.to(device)
+                fake_scr = fake_scr.to(device)
+                HRImg = HRImg.to(device)
+                GLoss += generatorCriterion(fake_scr, fakeHR, HRImg, idx)
+                idx += 1
+        else:
+            GLoss = generatorCriterion(fakeHR, target)
 
-        GLoss = generatorCriterion(fakeHR, target)
-
-        #import pdb; pdb.set_trace()
         GLoss /= len(data)
 
         # Calculate gradients
@@ -195,6 +190,7 @@ def trainModel(epoch):
         runningResults['DScore'] += realOut.item() * args.batchSize
         runningResults['GScore'] += fake_out.item() * args.batchSize
 
+        import pdb; pdb.set_trace()
         trainBar.set_description(desc='[Epoch: %d/%d] D Loss: %.4f G Loss: %.4f D(x): %.4f D(G(z)): %.4f' %
                                        (epoch, args.nEpochs, runningResults['DLoss'] / runningResults['batchSize'],
                                        runningResults['GLoss'] / runningResults['batchSize'],
@@ -236,6 +232,30 @@ def saveModelParams(epoch, runningResults, validationResults={}):
 
 def main():
     """ Lets begin the training process! """
+
+    if args.pretrained:
+        model_name = os.path.join(args.save_folder + args.pretrained_sr)
+        if os.path.exists(model_name):
+            if args.gpu_mode and torch.cuda.is_available():
+                state_dict = torch.load(model_name)
+                netG.load_state_dict(state_dict)
+            else:
+                # original saved file with DataParallel
+                state_dict = torch.load(model_name, map_location=torch.device('cpu'))
+
+                # create new OrderedDict that does not contain module.
+                from collections import OrderedDict
+                new_state_dict = OrderedDict()
+                for k, v in state_dict.items():
+                    name = k[7:]  # remove module.
+                    new_state_dict[name] = v
+
+                # load params
+                netG.load_state_dict(new_state_dict)
+
+            print('Pre-trained SR model loaded from:', model_name)
+        else:
+            print('Couldn\'t find pre-trained SR model at:', model_name)
 
     for epoch in range(args.start_epoch, args.nEpochs + 1):
         runningResults = trainModel(epoch)
