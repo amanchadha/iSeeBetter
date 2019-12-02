@@ -119,7 +119,6 @@ def trainModel(epoch):
         netD.zero_grad()
 
         #import pdb; pdb.set_trace()
-        data.to(device)
 
         if args.gpu_mode and torch.cuda.is_available():
             input = Variable(input).cuda()
