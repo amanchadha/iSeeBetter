@@ -107,16 +107,18 @@ def trainModel(epoch):
     next(iterTrainBar)
 
     for data in iterTrainBar:
-        runningResults['batchSize'] += args.batchSize
+        batchSize = len(data)
+        runningResults['batchSize'] += batchSize
 
         ################################################################################################################
         # (1) Update D network: maximize D(x)-1-D(G(z))
         ################################################################################################################
         if not args.useL1Loss:
             fakeHRs = []
-            fakeLRs = []
-        fakeScrs = []
-        realScrs = []
+            targets = []
+            fakeScrs = []
+            realScrs = []
+
         DLoss = 0
 
         # Zero-out gradients, i.e., start afresh
@@ -131,6 +133,7 @@ def trainModel(epoch):
             flow = [Variable(j).cuda().float() for j in flow]
         else:
             input = Variable(input).to(device=device, dtype=torch.float)
+            target = Variable(target).to(device=device, dtype=torch.float)
             bicubic = Variable(bicubic).to(device=device, dtype=torch.float)
             neigbor = [Variable(j).to(device=device, dtype=torch.float) for j in neigbor]
             flow = [Variable(j).to(device=device, dtype=torch.float) for j in flow]
@@ -144,8 +147,9 @@ def trainModel(epoch):
 
         if not args.useL1Loss:
             fakeHRs.append(fakeHR)
-        fakeScrs.append(fake_out)
-        realScrs.append(realOut)
+            targets.append(target)
+            fakeScrs.append(fake_out)
+            realScrs.append(realOut)
 
         DLoss += 1 - realOut + fake_out
 
@@ -167,7 +171,7 @@ def trainModel(epoch):
 
         if not args.useL1Loss:
             idx = 0
-            for fakeHR, fake_scr, HRImg, LRImg in zip(fakeHRs, fakeScrs, target, data):
+            for fakeHR, fake_scr, HRImg in zip(fakeHRs, fakeScrs, targets):
                 fakeHR = fakeHR.to(device)
                 fake_scr = fake_scr.to(device)
                 HRImg = HRImg.to(device)
@@ -192,7 +196,7 @@ def trainModel(epoch):
         runningResults['GScore'] += fake_out.item() * args.batchSize
 
         trainBar.set_description(desc='[Epoch: %d/%d] D Loss: %.4f G Loss: %.4f D(x): %.4f D(G(z)): %.4f' %
-                                       (epoch, args.nEpochs, runningResults['DLoss'] / runningResults['batchSize'],
+                                      (epoch, args.nEpochs, runningResults['DLoss'] / runningResults['batchSize'],
                                        runningResults['GLoss'] / runningResults['batchSize'],
                                        runningResults['DScore'] / runningResults['batchSize'],
                                        runningResults['GScore'] / runningResults['batchSize']))
