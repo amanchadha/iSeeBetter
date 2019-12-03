@@ -70,8 +70,8 @@ def trainModel(epoch, training_data_loader, netG, netD, optimizerD, optimizerG, 
         if args.APITLoss:
             fakeHRs = []
             targets = []
-            fakeScrs = []
-            realScrs = []
+        fakeScrs = []
+        realScrs = []
 
         DLoss = 0
 
@@ -102,8 +102,8 @@ def trainModel(epoch, training_data_loader, netG, netD, optimizerD, optimizerG, 
         if args.APITLoss:
             fakeHRs.append(fakeHR)
             targets.append(target)
-            fakeScrs.append(fakeOut)
-            realScrs.append(realOut)
+        fakeScrs.append(fakeOut)
+        realScrs.append(realOut)
 
         DLoss += 1 - realOut + fakeOut
 
