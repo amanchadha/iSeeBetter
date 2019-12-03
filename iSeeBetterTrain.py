@@ -15,7 +15,7 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 import utils
 
-################################################## iSEEBETTER TRAINER KNOBS #############################################
+################################################## iSEEBETTER TRAINER KNOBS ############################################
 UPSCALE_FACTOR = 4
 ########################################################################################################################
 
@@ -42,60 +42,14 @@ parser.add_argument('--data_augmentation', type=bool, default=True)
 parser.add_argument('--model_type', type=str, default='RBPN')
 parser.add_argument('--residual', type=bool, default=False)
 parser.add_argument('--pretrained_sr', default='RBPN_4x.pth', help='sr pretrained base model')
-parser.add_argument('--pretrained', action='store_true')
+parser.add_argument('--pretrained', action='store_true', help='Use pretrained model')
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
 parser.add_argument('--prefix', default='F7', help='Location to save checkpoint models')
-parser.add_argument('--useL1Loss', action='store_true')
+parser.add_argument('--APITLoss', action='store_true', help='Use APIT Loss')
+parser.add_argument('--useDataParallel', action='store_false', help='Use DataParallel')
 parser.add_argument('-v', '--debug', default=False, action='store_true', help='Print debug spew.')
 
-args = parser.parse_args()
-
-# Initialize Logger
-logger.initLogger(args.debug)
-
-# Load dataset
-logger.info('==> Loading datasets')
-train_set = get_training_set(args.data_dir, args.nFrames, args.upscale_factor, args.data_augmentation, args.file_list,
-                             args.other_dataset, args.patch_size, args.future_frame)
-training_data_loader = DataLoader(dataset=train_set, num_workers=args.threads, batch_size=args.batchSize, shuffle=True)
-
-# Use generator as RBPN
-netG = RBPN(num_channels=3, base_filter=256,  feat = 64, num_stages=3, n_resblock=5, nFrames=args.nFrames, scale_factor=args.upscale_factor)
-logger.info('# of Generator parameters:', sum(param.numel() for param in netG.parameters()))
-
-# Use discriminator from SRGAN
-netD = Discriminator()
-logger.info('# of Discriminator parameters:', sum(param.numel() for param in netD.parameters()))
-
-# Generator loss
-generatorCriterion = nn.L1Loss() if args.useL1Loss else GeneratorLoss()
-
-# Specify device
-device = torch.device("cuda:0" if torch.cuda.is_available() and args.gpu_mode else "cpu")
-
-if args.gpu_mode and torch.cuda.is_available():
-    def printCUDAStats():
-        logger.info("# of CUDA devices detected: %s", torch.cuda.device_count())
-        logger.info("Using CUDA device #: %s", torch.cuda.current_device())
-        logger.info("CUDA device name: %s", torch.cuda.get_device_name(torch.cuda.current_device()))
-
-    printCUDAStats()
-
-    netG.cuda()
-    netD.cuda()
-
-    netG.to(device)
-    netD.to(device)
-
-    generatorCriterion.cuda()
-
-# Use Adam optimizer
-optimizerG = optim.Adam(netG.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-8)
-optimizerD = optim.Adam(netD.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-8)
-
-results = {'DLoss': [], 'GLoss': [], 'DScore': [], 'GScore': [], 'PSNR': [], 'SSIM': []}
-
-def trainModel(epoch):
+def trainModel(epoch, training_data_loader, netG, netD, optimizerD, optimizerG, generatorCriterion, device, args):
     trainBar = tqdm(training_data_loader)
     runningResults = {'batchSize': 0, 'DLoss': 0, 'GLoss': 0, 'DScore': 0, 'GScore': 0}
 
@@ -113,7 +67,7 @@ def trainModel(epoch):
         ################################################################################################################
         # (1) Update D network: maximize D(x)-1-D(G(z))
         ################################################################################################################
-        if not args.useL1Loss:
+        if args.APITLoss:
             fakeHRs = []
             targets = []
             fakeScrs = []
@@ -143,15 +97,15 @@ def trainModel(epoch):
             fakeHR = fakeHR + bicubic
 
         realOut = netD(target).mean()
-        fake_out = netD(fakeHR).mean()
+        fakeOut = netD(fakeHR).mean()
 
-        if not args.useL1Loss:
+        if args.APITLoss:
             fakeHRs.append(fakeHR)
             targets.append(target)
-            fakeScrs.append(fake_out)
+            fakeScrs.append(fakeOut)
             realScrs.append(realOut)
 
-        DLoss += 1 - realOut + fake_out
+        DLoss += 1 - realOut + fakeOut
 
         DLoss /= len(data)
 
@@ -169,7 +123,7 @@ def trainModel(epoch):
         # Zero-out gradients, i.e., start afresh
         netG.zero_grad()
 
-        if not args.useL1Loss:
+        if args.APITLoss:
             idx = 0
             for fakeHR, fake_scr, HRImg in zip(fakeHRs, fakeScrs, targets):
                 fakeHR = fakeHR.to(device)
@@ -189,14 +143,14 @@ def trainModel(epoch):
         optimizerG.step()
 
         realOut = torch.Tensor(realScrs).mean()
-        fake_out = torch.Tensor(fakeScrs).mean()
+        fakeOut = torch.Tensor(fakeScrs).mean()
         runningResults['GLoss'] += GLoss.item() * args.batchSize
         runningResults['DLoss'] += DLoss.item() * args.batchSize
         runningResults['DScore'] += realOut.item() * args.batchSize
-        runningResults['GScore'] += fake_out.item() * args.batchSize
+        runningResults['GScore'] += fakeOut.item() * args.batchSize
 
         trainBar.set_description(desc='[Epoch: %d/%d] D Loss: %.4f G Loss: %.4f D(x): %.4f D(G(z)): %.4f' %
-                                      (epoch, args.nEpochs, runningResults['DLoss'] / runningResults['batchSize'],
+                                       (epoch, args.nEpochs, runningResults['DLoss'] / runningResults['batchSize'],
                                        runningResults['GLoss'] / runningResults['batchSize'],
                                        runningResults['DScore'] / runningResults['batchSize'],
                                        runningResults['GScore'] / runningResults['batchSize']))
@@ -208,16 +162,19 @@ def trainModel(epoch):
     if (epoch + 1) % (args.nEpochs / 2) == 0:
         for param_group in optimizerG.param_groups:
             param_group['lr'] /= 10.0
-        logger.info('Learning rate decay: lr={}'.format(optimizerG.param_groups[0]['lr']))
+        logger.info('Learning rate decay: lr=%s', (optimizerG.param_groups[0]['lr']))
 
     return runningResults
 
-def saveModelParams(epoch, runningResults, validationResults={}):
+def saveModelParams(epoch, runningResults, netG, netD):
+    results = {'DLoss': [], 'GLoss': [], 'DScore': [], 'GScore': [], 'PSNR': [], 'SSIM': []}
+
     # Save model parameters
     torch.save(netG.state_dict(), 'weights/netG_epoch_%d_%d.pth' % (UPSCALE_FACTOR, epoch))
     torch.save(netD.state_dict(), 'weights/netD_epoch_%d_%d.pth' % (UPSCALE_FACTOR, epoch))
 
     logger.info("Checkpoint saved to {}".format('weights/netG_epoch_%d_%d.pth' % (UPSCALE_FACTOR, epoch)))
+    logger.info("Checkpoint saved to {}".format('weights/netD_epoch_%d_%d.pth' % (UPSCALE_FACTOR, epoch)))
 
     # Save Loss\Scores\PSNR\SSIM
     results['DLoss'].append(runningResults['DLoss'] / runningResults['batchSize'])
@@ -237,20 +194,71 @@ def saveModelParams(epoch, runningResults, validationResults={}):
 def main():
     """ Lets begin the training process! """
 
-    if args.useL1Loss:
-        logger.info("Generator Loss: L1 Loss.")
+    args = parser.parse_args()
+
+    # Initialize Logger
+    logger.initLogger(args.debug)
+
+    # Load dataset
+    logger.info('==> Loading datasets')
+    train_set = get_training_set(args.data_dir, args.nFrames, args.upscale_factor, args.data_augmentation,
+                                 args.file_list,
+                                 args.other_dataset, args.patch_size, args.future_frame)
+    training_data_loader = DataLoader(dataset=train_set, num_workers=args.threads, batch_size=args.batchSize,
+                                      shuffle=True)
+
+    # Use generator as RBPN
+    netG = RBPN(num_channels=3, base_filter=256, feat=64, num_stages=3, n_resblock=5, nFrames=args.nFrames,
+                scale_factor=args.upscale_factor)
+    logger.info('# of Generator parameters: %s', sum(param.numel() for param in netG.parameters()))
+
+    # Use DataParallel?
+    if args.useDataParallel:
+        gpus_list = range(args.gpus)
+        netG = torch.nn.DataParallel(netG, device_ids=gpus_list)
+
+    # Use discriminator from SRGAN
+    netD = Discriminator()
+    logger.info('# of Discriminator parameters: %s', sum(param.numel() for param in netD.parameters()))
+
+    # Generator loss
+    generatorCriterion = nn.L1Loss() if not args.APITLoss else GeneratorLoss()
+
+    # Specify device
+    device = torch.device("cuda:0" if torch.cuda.is_available() and args.gpu_mode else "cpu")
+
+    if args.gpu_mode and torch.cuda.is_available():
+        utils.printCUDAStats()
+
+        netG.cuda()
+        netD.cuda()
+
+        netG.to(device)
+        netD.to(device)
+
+        generatorCriterion.cuda()
+
+    # Use Adam optimizer
+    optimizerG = optim.Adam(netG.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-8)
+    optimizerD = optim.Adam(netD.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-8)
+
+    if args.APITLoss:
+        logger.info("Generator Loss: Adversarial Loss + Perception Loss + Image Loss + TV Loss")
     else:
-        logger.info("Generator Loss: Adversarial Loss + Perception Loss + TV Loss.")
+        logger.info("Generator Loss: L1 Loss")
+
+    # print iSeeBetter architecture
+    utils.printNetworkArch(netG, netD)
 
     if args.pretrained:
         modelPath = os.path.join(args.save_folder + args.pretrained_sr)
         utils.loadPreTrainedModel(gpuMode=args.gpu_mode, model=netG, modelPath=modelPath)
 
     for epoch in range(args.start_epoch, args.nEpochs + 1):
-        runningResults = trainModel(epoch)
+        runningResults = trainModel(epoch, training_data_loader, netG, netD, optimizerD, optimizerG, generatorCriterion, device, args)
 
         if (epoch + 1) % (args.snapshots) == 0:
-            saveModelParams(epoch, runningResults)
+            saveModelParams(epoch, runningResults, netG, netD)
 
 if __name__ == "__main__":
     main()

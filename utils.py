@@ -5,6 +5,7 @@ Aman Chadha | aman@amanchadha.com
 
 import os
 import torch
+import logger
 
 def loadPreTrainedModel(gpuMode, model, modelPath):
     if os.path.exists(modelPath):
@@ -32,3 +33,24 @@ def loadPreTrainedModel(gpuMode, model, modelPath):
         print('Pre-trained SR model loaded from:', modelPath)
     else:
         print('Couldn\'t find pre-trained SR model at:', modelPath)
+
+def printCUDAStats():
+    logger.info("# of CUDA devices detected: %s", torch.cuda.device_count())
+    logger.info("Using CUDA device #: %s", torch.cuda.current_device())
+    logger.info("CUDA device name: %s", torch.cuda.get_device_name(torch.cuda.current_device()))
+
+def _printNetworkArch(net):
+    num_params = 0
+    for param in net.parameters():
+        num_params += param.numel()
+    print(net)
+    print('Total number of parameters: %d' % num_params)
+
+def printNetworkArch(netG, netD):
+    logger.info('------------- iSeeBetter Network Architecture -------------')
+    logger.info('----------------- Generator Architecture ------------------')
+    _printNetworkArch(netG)
+
+    logger.info('--------------- Discriminator Architecture ----------------')
+    _printNetworkArch(netD)
+    logger.info('-----------------------------------------------------------')

@@ -36,8 +36,9 @@ parser.add_argument('--nFrames', type=int, default=7)
 parser.add_argument('--model_type', type=str, default='RBPN')
 parser.add_argument('--residual', type=bool, default=False)
 parser.add_argument('--output', default='Results/', help='Location to save checkpoint models')
-parser.add_argument('--model', default='weights/netG_epoch_4_1.pth', help='sr pretrained base model')
-# parser.add_argument('--model', default='weights/RBPN_4x.pth', help='sr pretrained base model')
+#parser.add_argument('--model', default='weights/netG_epoch_4_1_APITLoss.pth', help='sr pretrained base model')
+#parser.add_argument('--model', default='weights/netG_epoch_4_1.pth', help='sr pretrained base model')
+#parser.add_argument('--model', default='weights/RBPN_4x.pth', help='sr pretrained base model')
 
 opt = parser.parse_args()
 
@@ -71,6 +72,9 @@ if cuda:
     model = model.cuda(gpus_list[0])
 
 def eval():
+    # print iSeeBetter architecture
+    utils.printNetworkArch(netG=model, netD={})
+
     # load model
     modelPath = os.path.join(opt.model)
     utils.loadPreTrainedModel(gpuMode=opt.gpu_mode, model=model, modelPath=modelPath)
