@@ -54,11 +54,11 @@ torch.manual_seed(opt.seed)
 if cuda:
     torch.cuda.manual_seed(opt.seed)
 
-print('===> Loading datasets')
+print('==> Loading datasets')
 test_set = get_test_set(opt.data_dir, opt.nFrames, opt.upscale_factor, opt.file_list, opt.other_dataset, opt.future_frame)
 testing_data_loader = DataLoader(dataset=test_set, num_workers=opt.threads, batch_size=opt.testBatchSize, shuffle=False)
 
-print('===> Building model ', opt.model_type)
+print('==> Building model ', opt.model_type)
 if opt.model_type == 'RBPN':
     model = RBPN(num_channels=3, base_filter=256,  feat = 64, num_stages=3, n_resblock=5, nFrames=opt.nFrames, scale_factor=opt.upscale_factor)
 
@@ -105,7 +105,7 @@ def eval():
             prediction = prediction + bicubic
             
         t1 = time.time()
-        print("===> Processing: %s || Timer: %.4f sec." % (str(count), (t1 - t0)))
+        print("==> Processing: %s || Timer: %.4f sec." % (str(count), (t1 - t0)))
         save_img(prediction.cpu().data, str(count), True)
         save_img(target, str(count), False)
         

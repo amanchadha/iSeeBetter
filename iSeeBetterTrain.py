@@ -50,22 +50,22 @@ parser.add_argument('-v', '--debug', default=False, action='store_true', help='P
 
 args = parser.parse_args()
 
+# Initialize Logger
+logger.initLogger(args.debug)
+
 # Load dataset
-print('===> Loading datasets')
+logger.info('==> Loading datasets')
 train_set = get_training_set(args.data_dir, args.nFrames, args.upscale_factor, args.data_augmentation, args.file_list,
                              args.other_dataset, args.patch_size, args.future_frame)
 training_data_loader = DataLoader(dataset=train_set, num_workers=args.threads, batch_size=args.batchSize, shuffle=True)
 
-# Initialize Logger
-logger.initLogger(args.debug)
-
 # Use generator as RBPN
 netG = RBPN(num_channels=3, base_filter=256,  feat = 64, num_stages=3, n_resblock=5, nFrames=args.nFrames, scale_factor=args.upscale_factor)
-print('# of Generator parameters:', sum(param.numel() for param in netG.parameters()))
+logger.info('# of Generator parameters:', sum(param.numel() for param in netG.parameters()))
 
 # Use discriminator from SRGAN
 netD = Discriminator()
-print('# of Discriminator parameters:', sum(param.numel() for param in netD.parameters()))
+logger.info('# of Discriminator parameters:', sum(param.numel() for param in netD.parameters()))
 
 # Generator loss
 generatorCriterion = nn.L1Loss() if args.useL1Loss else GeneratorLoss()
@@ -208,7 +208,7 @@ def trainModel(epoch):
     if (epoch + 1) % (args.nEpochs / 2) == 0:
         for param_group in optimizerG.param_groups:
             param_group['lr'] /= 10.0
-        print('Learning rate decay: lr={}'.format(optimizerG.param_groups[0]['lr']))
+        logger.info('Learning rate decay: lr={}'.format(optimizerG.param_groups[0]['lr']))
 
     return runningResults
 
@@ -236,6 +236,11 @@ def saveModelParams(epoch, runningResults, validationResults={}):
 
 def main():
     """ Lets begin the training process! """
+
+    if args.useL1Loss:
+        logger.info("Generator Loss: L1 Loss.")
+    else:
+        logger.info("Generator Loss: Adversarial Loss + Perception Loss + TV Loss.")
 
     if args.pretrained:
         modelPath = os.path.join(args.save_folder + args.pretrained_sr)
