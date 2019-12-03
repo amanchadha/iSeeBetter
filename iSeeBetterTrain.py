@@ -46,7 +46,7 @@ parser.add_argument('--pretrained', action='store_true', help='Use pretrained mo
 parser.add_argument('--save_folder', default='weights/', help='Location to save checkpoint models')
 parser.add_argument('--prefix', default='F7', help='Location to save checkpoint models')
 parser.add_argument('--APITLoss', action='store_true', help='Use APIT Loss')
-parser.add_argument('--useDataParallel', action='store_false', help='Use DataParallel')
+parser.add_argument('--useDataParallel', action='store_true', help='Use DataParallel')
 parser.add_argument('-v', '--debug', default=False, action='store_true', help='Print debug spew.')
 
 def trainModel(epoch, training_data_loader, netG, netD, optimizerD, optimizerG, generatorCriterion, device, args):
