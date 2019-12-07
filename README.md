@@ -55,7 +55,7 @@ To train iSeeBetter, we amalgamated diverse datasets with differing video length
 
 ## Results
 
-We compared iSeeBetter with six state-of-the-art VSR algorithms.: DDBPN, B123 + T, DRDVSR, FRVSR, VSR-DUF and RBPN/6-PF.
+We compared iSeeBetter with six state-of-the-art VSR algorithms: DBPN, B123 + T, DRDVSR, FRVSR, VSR-DUF and RBPN/6-PF.
 
 ![results1](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res1.jpg)
 <p align="center">Table 2. PSNR/SSIM evaluation of state-of-the-art VSR algorithms using Vid4 for 4×. Bold numbers indicate best performance.</p>
