@@ -1,4 +1,4 @@
-# iSeeBetter: A Novel Approach to Video Super-Resolution using Recurrent-Generative Back-Projection Networks
+# iSeeBetter: Spatio-Temporal Video Super Resolution using Recurrent-Generative Back-Projection Networks
 
 Project for Stanford CS230: Deep Learning
 
