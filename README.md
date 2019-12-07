@@ -44,7 +44,7 @@ iSeeBetter uses RBPN and SRGAN as the generator and discriminator respectively. 
 <p align="center">Figure 4: DBPN architecture for SISR, where we perform up-down-up sampling using 8 × 8 kernels with stride of 4, padding of 2. Similar to the ResNet architecture above, the DBPN network also uses Parametric ReLUs as its activation functions.</p>
 
 ![Disc](https://github.com/amanchadha/iSeeBetter/blob/master/images/Disc.jpg)
-<p align="center">Figure 5: Discriminator Architecture from SRGAN (16). The discriminator uses Leaky ReLUs for computing its activations.</p>
+<p align="center">Figure 5: Discriminator Architecture from SRGAN. The discriminator uses Leaky ReLUs for computing its activations.</p>
 
 ## Dataset
 
@@ -55,7 +55,7 @@ To train iSeeBetter, we amalgamated diverse datasets with differing video length
 
 ## Results
 
-We compared iSeeBetter with six state-of-the-art VSR algorithms: DDBPN \cite{haris2018deep}, B$_{\text{123}}$ + T \cite{liu2017robust}, DRDVSR \cite{tao2017detail}, FRVSR \cite{sajjadi2018frame}, VSR-DUF \cite{jo2018deep} and RBPN/6-PF \cite{haris2019recurrent}.
+We compared iSeeBetter with six state-of-the-art VSR algorithms.: DDBPN, B123 + T, DRDVSR, FRVSR, VSR-DUF and RBPN/6-PF.
 
 ![results1](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res1.jpg)
 <p align="center">Table 2. PSNR/SSIM evaluation of state-of-the-art VSR algorithms using Vid4 for 4×. Bold numbers indicate best performance.</p>
