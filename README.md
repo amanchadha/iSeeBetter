@@ -37,7 +37,7 @@ iSeeBetter uses RBPN and SRGAN as the generator and discriminator respectively. 
 
 ![ResNet_MISR](https://github.com/amanchadha/iSeeBetter/blob/master/images/ResNet_MISR.jpg)
 
-![DBPN_SISR](https://github.com/amanchadha/iSeeBetter/blob/master/images/DBPN_SISR.jpg)
+![DBPN_SISR](https://github.com/amanchadha/iSeeBetter/blob/master/images/DBPN_SISR.png)
 
 ![Disc](https://github.com/amanchadha/iSeeBetter/blob/master/images/Disc.jpg)
 
