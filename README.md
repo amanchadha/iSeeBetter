@@ -33,7 +33,7 @@ Recently, learning-based models have enhanced the performance of Single-Image Su
 ![network arch](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_NNArch.jpg)
 <p align="center">Figure 2: Network architecture</p>
 
-# Model Architecture
+## Model Architecture
 
 iSeeBetter uses RBPN and SRGAN as the generator and discriminator respectively. RBPN has two approaches. The horizontal flow (marked with blue arrows) enlarges LR(t) using SISR, as shown in Figure 4. The vertical flow (marked with red arrows) is based on MISR which is shown in Figure 3, and computes the residual features from a pair of LR(t) to neighbor frames (LR(t-1), ..., LR(t-n)) and the pre-computed dense motion flow maps (F(t-1), ..., F(t-n)). At each projection step, RBPN observes the missing details from LR(t) and extracts the residual features from each neighboring frame to recover those details. SISR and MISR thus extract missing details from different sources. Within the projection models, RBPN utilizes a recurrent encoder-decoder mechanism for incorporating details extracted in SISR and MISR paths through back-projection.
 
@@ -48,7 +48,7 @@ iSeeBetter uses RBPN and SRGAN as the generator and discriminator respectively. 
 
 ## Dataset
 
-To train iSeeBetter, we amalgamated diverse datasets with differing video lengths, resolutions, motion sequences and number of clips. Table 1 presents a summary of the datasets used. When training our model, we generated the corresponding LR frame for each HR input frame by performing 4$\times$ down-sampling using bicubic interpolation. We also applied data augmentation techniques such as rotation, flipping and random cropping. To extend our dataset further, we wrote scripts to collect additional data from YouTube, bringing our dataset total to about 170,000 clips which were shuffled for training and testing. Our training/validation/test split was 80\%/10\%/10%.
+To train iSeeBetter, we amalgamated diverse datasets with differing video lengths, resolutions, motion sequences and number of clips. Table 1 presents a summary of the datasets used. When training our model, we generated the corresponding LR frame for each HR input frame by performing 4x down-sampling using bicubic interpolation. We also applied data augmentation techniques such as rotation, flipping and random cropping. To extend our dataset further, we wrote scripts to collect additional data from YouTube, bringing our dataset total to about 170,000 clips which were shuffled for training and testing. Our training/validation/test split was 80\%/10\%/10%.
 
 ![results](https://github.com/amanchadha/iSeeBetter/blob/master/images/Dataset.jpg)
 <p align="center">Table 1. Datasets used for training and evaluation</p>
