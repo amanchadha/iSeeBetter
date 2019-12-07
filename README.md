@@ -29,43 +29,43 @@ Recently, learning-based models have enhanced the performance of Single-Image Su
  
 ![adjacent frame similarity](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_AFS.jpg)
 <p align="center">Figure 1: Adjacent frame similarity</p>
-<br>
+ 
 ![network arch](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_NNArch.jpg)
 <p align="center">Figure 2: Network architecture</p>
-<br>
+
 # Model Architecture
 
 iSeeBetter uses RBPN and SRGAN as the generator and discriminator respectively. RBPN has two approaches. The horizontal flow (marked with blue arrows) enlarges LR(t) using SISR, as shown in Figure 4. The vertical flow (marked with red arrows) is based on MISR which is shown in Figure 3, and computes the residual features from a pair of LR(t) to neighbor frames (LR(t-1), ..., LR(t-n)) and the pre-computed dense motion flow maps (F(t-1), ..., F(t-n)). At each projection step, RBPN observes the missing details from LR(t) and extracts the residual features from each neighboring frame to recover those details. SISR and MISR thus extract missing details from different sources. Within the projection models, RBPN utilizes a recurrent encoder-decoder mechanism for incorporating details extracted in SISR and MISR paths through back-projection.
 
 ![ResNet_MISR](https://github.com/amanchadha/iSeeBetter/blob/master/images/ResNet_MISR.jpg)
 <p align="center">Figure 3: ResNet architecture for MISR that is composed of three tiles of five blocks where each block consists of two convolutional layers with 3 × 3 kernels, stride of 1 and padding of 1. The network uses Parametric ReLUs for its activations.</p>
-<br>
+
 ![DBPN_SISR](https://github.com/amanchadha/iSeeBetter/blob/master/images/DBPN_SISR.png)
 <p align="center">Figure 4: DBPN architecture for SISR, where we perform up-down-up sampling using 8 × 8 kernels with stride of 4, padding of 2. Similar to the ResNet architecture above, the DBPN network also uses Parametric ReLUs as its activation functions.</p>
-<br>
+
 ![Disc](https://github.com/amanchadha/iSeeBetter/blob/master/images/Disc.jpg)
 <p align="center">Figure 5: Discriminator Architecture from SRGAN (16). The discriminator uses Leaky ReLUs for computing its activations.</p>
-<br>
+
 ## Dataset
 
 To train iSeeBetter, we amalgamated diverse datasets with differing video lengths, resolutions, motion sequences and number of clips. Table 1 presents a summary of the datasets used. When training our model, we generated the corresponding LR frame for each HR input frame by performing 4$\times$ down-sampling using bicubic interpolation. We also applied data augmentation techniques such as rotation, flipping and random cropping. To extend our dataset further, we wrote scripts to collect additional data from YouTube, bringing our dataset total to about 170,000 clips which were shuffled for training and testing. Our training/validation/test split was 80\%/10\%/10%.
 
 ![results](https://github.com/amanchadha/iSeeBetter/blob/master/images/Dataset.jpg)
 <p align="center">Table 1. Datasets used for training and evaluation</p>
-<br>
+
 ## Results
 
 We compared iSeeBetter with six state-of-the-art VSR algorithms: DDBPN \cite{haris2018deep}, B$_{\text{123}}$ + T \cite{liu2017robust}, DRDVSR \cite{tao2017detail}, FRVSR \cite{sajjadi2018frame}, VSR-DUF \cite{jo2018deep} and RBPN/6-PF \cite{haris2019recurrent}.
 
 ![results1](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res1.jpg)
 <p align="center">Table 2. PSNR/SSIM evaluation of state-of-the-art VSR algorithms using Vid4 for 4×. Bold numbers indicate best performance.</p>
-<br>
+
 ![results2](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res2.jpg)
 <p align="center">Table 3. Visually inspecting examples from Vid4, SPMCS and Vimeo-90k comparing RBPN and iSeeBetter. We chose VSR-DUF for comparison because it was the state-of-the-art at the time of publication. Top row: fine-grained textual features that help with readability; middle row: intricate high-frequency image details; bottom row: camera panning motion.</p>
-<br>
+
 ![results3](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res3.jpg)
 <p align="center">Table 4. PSNR/SSIM evaluation of state-of-the-art VSR algorithms using Vimeo90K for 4×. Bold numbers indicate best performance.</p>
-<br>
+
 ## Pretrained Model
 Model trained for N epochs included under ```weights/```
 
