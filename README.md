@@ -31,13 +31,31 @@ Figure 1: Adjacent frame similarity
 ![network arch](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_NNArch.jpg)
 Figure 2: Network architecture
 
+# Model Architecture
+
+iSeeBetter uses RBPN and SRGAN as the generator and discriminator respectively. RBPN has two approaches. The horizontal flow (marked with blue arrows) enlarges LR(t) using SISR, as shown in Figure 4. The vertical flow (marked with red arrows) is based on MISR which is shown in Figure 3, and computes the residual features from a pair of LR(t) to neighbor frames (LR(t-1), ..., LR(t-n)) and the pre-computed dense motion flow maps (F(t-1), ..., F(t-n)). At each projection step, RBPN observes the missing details from LR(t) and extracts the residual features from each neighboring frame to recover those details. SISR and MISR thus extract missing details from different sources. Within the projection models, RBPN utilizes a recurrent encoder-decoder mechanism for incorporating details extracted in SISR and MISR paths through back-projection.
+
+![ResNet_MISR](https://github.com/amanchadha/iSeeBetter/blob/master/images/ResNet_MISR.jpg)
+
+![DBPN_SISR](https://github.com/amanchadha/iSeeBetter/blob/master/images/DBPN_SISR.jpg)
+
+![Disc](https://github.com/amanchadha/iSeeBetter/blob/master/images/Disc.jpg)
+
 ## Dataset
 
-To train and evaluate our proposed model, we used the [Vimeo90K](http://data.csail.mit.edu/tofu/dataset/vimeo_septuplet.zip) dataset collected in the TOFlow project of MIT CSAIL which contains around 90,000 7-frame HR sequences with a fixed resolution (448 x 256), extracted from 39K video clips from Vimeo.com. When training our models, we generate the corresponding LR frame for each HR input frame by performing 4x down-sampling. To extend our dataset further, we have also built a video-to-frames tool to collect more data from YouTube, augmenting our dataset to roughly 47K clips. Our training/validation/test split was 80%/10%/10%.
+To train iSeeBetter, we amalgamated diverse datasets with differing video lengths, resolutions, motion sequences and number of clips. Table 1 presents a summary of the datasets used. When training our model, we generated the corresponding LR frame for each HR input frame by performing 4$\times$ down-sampling using bicubic interpolation. We also applied data augmentation techniques such as rotation, flipping and random cropping. To extend our dataset further, we wrote scripts to collect additional data from YouTube, bringing our dataset total to about 170,000 clips which were shuffled for training and testing. Our training/validation/test split was 80\%/10\%/10%.
+
+![results](https://github.com/amanchadha/iSeeBetter/blob/master/images/Dataset.jpg)
 
 ## Results
 
-![results](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_Results.jpg)
+We compared iSeeBetter with six state-of-the-art VSR algorithms: DDBPN \cite{haris2018deep}, B$_{\text{123}}$ + T \cite{liu2017robust}, DRDVSR \cite{tao2017detail}, FRVSR \cite{sajjadi2018frame}, VSR-DUF \cite{jo2018deep} and RBPN/6-PF \cite{haris2019recurrent}.
+
+![results1](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res1.jpg)
+
+![results2](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res2.jpg)
+
+![results3](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res3.jpg)
 
 ## Pretrained Model
 Model trained for N epochs included under ```weights/```
