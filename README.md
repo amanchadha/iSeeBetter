@@ -57,11 +57,11 @@ To train iSeeBetter, we amalgamated diverse datasets with differing video length
 
 We compared iSeeBetter with six state-of-the-art VSR algorithms: DBPN, B123 + T, DRDVSR, FRVSR, VSR-DUF and RBPN/6-PF.
 
-![results1](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res1.jpg)
-<p align="center">Table 2. PSNR/SSIM evaluation of state-of-the-art VSR algorithms using Vid4 for 4×. Bold numbers indicate best performance.</p>
+![results2](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res1.jpg)
+<p align="center">Table 2. Visually inspecting examples from Vid4, SPMCS and Vimeo-90k comparing RBPN and iSeeBetter. We chose VSR-DUF for comparison because it was the state-of-the-art at the time of publication. Top row: fine-grained textual features that help with readability; middle row: intricate high-frequency image details; bottom row: camera panning motion.</p>
 
-![results2](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res2.jpg)
-<p align="center">Table 3. Visually inspecting examples from Vid4, SPMCS and Vimeo-90k comparing RBPN and iSeeBetter. We chose VSR-DUF for comparison because it was the state-of-the-art at the time of publication. Top row: fine-grained textual features that help with readability; middle row: intricate high-frequency image details; bottom row: camera panning motion.</p>
+![results1](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res2.jpg)
+<p align="center">Table 3. PSNR/SSIM evaluation of state-of-the-art VSR algorithms using Vid4 for 4×. Bold numbers indicate best performance.</p>
 
 ![results3](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res3.jpg)
 <p align="center">Table 4. PSNR/SSIM evaluation of state-of-the-art VSR algorithms using Vimeo90K for 4×. Bold numbers indicate best performance.</p>
