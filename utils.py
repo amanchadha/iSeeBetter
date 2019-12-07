@@ -43,14 +43,16 @@ def _printNetworkArch(net):
     num_params = 0
     for param in net.parameters():
         num_params += param.numel()
-    print(net)
-    print('Total number of parameters: %d' % num_params)
+    logger.info(net)
+    logger.info('Total number of parameters: %d' % num_params)
 
 def printNetworkArch(netG, netD):
     logger.info('------------- iSeeBetter Network Architecture -------------')
-    logger.info('----------------- Generator Architecture ------------------')
-    _printNetworkArch(netG)
+    if netG:
+        logger.info('----------------- Generator Architecture ------------------')
+        _printNetworkArch(netG)
 
-    logger.info('--------------- Discriminator Architecture ----------------')
-    _printNetworkArch(netD)
-    logger.info('-----------------------------------------------------------')
+    if netD:
+        logger.info('--------------- Discriminator Architecture ----------------')
+        _printNetworkArch(netD)
+        logger.info('-----------------------------------------------------------')
