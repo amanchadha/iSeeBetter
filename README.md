@@ -4,6 +4,8 @@ Project for Stanford CS230: Deep Learning
 
 ```Python3 | PyTorch | GANs | CNNs | ResNets | RNNs```
 
+![iSeeBetter_Poster](https://github.com/amanchadha/iSeeBetter/blob/master/AmanChadha_CS230_Poster.jpg)
+
 ## Required Packages
 
 ```
