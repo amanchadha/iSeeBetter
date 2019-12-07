@@ -15,7 +15,7 @@ tqdm==4.37.0
 ```
 
 Also needed is [Pyflow](https://github.com/pathak22/pyflow) which is a Python wrapper for [Ce Liu's C++ implementation](https://people.csail.mit.edu/celiu/OpticalFlow/) of Coarse2Fine Optical Flow.
-Pyflow binaries have been built for ubuntu and macOS and are available in the repository.
+Pyflow binaries have been built for Ubuntu and macOS and are available in the repository.
 If you need to rebuild Pyflow, follow the instructions on the [Pyflow Git](https://github.com/pathak22/pyflow) and do a ```cp pyflow*.so ..``` once you have built a shared object file on your target machine.
 
 To load,
@@ -26,10 +26,10 @@ To load,
 Recently, learning-based models have enhanced the performance of Single-Image Super-Resolution (SISR). However, applying SISR successively to each video frame leads to lack of temporal consistency. On the other hand, VSR models based on convolutional neural networks outperform traditional approaches in terms of image quality metrics such as Peak Signal to Noise Ratio (PSNR) and Structural SIMilarity (SSIM). While optimizing mean squared reconstruction error during training improves PSNR and SSIM, these metrics may not capture fine details in the image leading to misrepresentation of perceptual quality. We propose an Adaptive Frame Recurrent Video Super Resolution (AFRVSR) scheme that seeks to improve temporal consistency by utilizing information multiple similar adjacent frames (both future LR frames and previous SR estimates), in addition to the current frame. Further, to improve the “naturality” associated with the reconstructed image while eliminating artifacts seen with traditional algorithms, we combine the output of the AFRVSR algorithm with a Super-Resolution Generative Adversarial Network (SRGAN). The proposed idea thus not only considers spatial information in the current frame but also temporal information in the adjacent frames thereby offering superior reconstruction fidelity. Once our implementation is complete, we plan to show results on publicly available datasets that demonstrate that the proposed algorithms surpass current state-of-the-art performance in both accuracy and efficiency. 
  
 ![adjacent frame similarity](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_AFS.jpg)
-Figure 1: Adjacent frame similarity
+<div style="text-align:center">Figure 1: Adjacent frame similarity</div>
  
 ![network arch](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_NNArch.jpg)
-Figure 2: Network architecture
+<center>Figure 2: Network architecture</center>
 
 # Model Architecture
 
@@ -62,13 +62,13 @@ Model trained for N epochs included under ```weights/```
 
 ## Usage
 
-# Training 
+### Training 
 
 Train the model using (takes roughly 1.5 hours per epoch with a batch size of 2 on an NVIDIA Tesla V100):
 
 ```python iSeeBetterTrain.py```
 
-# Testing
+### Testing
 
 To use the pre-trained model and test on a random video from within the dataset:
 
@@ -83,5 +83,5 @@ Credits:
 ## Citation
 Cite the work as:
 ```
-CVPR citation
+WIP
 ```
