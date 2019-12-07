@@ -67,15 +67,17 @@ We compared iSeeBetter with six state-of-the-art VSR algorithms: DBPN, B123 + T,
 <p align="center">Table 4. PSNR/SSIM evaluation of state-of-the-art VSR algorithms using Vimeo90K for 4x. Bold numbers indicate best performance.</p>
 
 ## Pretrained Model
-Model trained for N epochs included under ```weights/```
+Model trained for 4 epochs included under ```weights/```
 
 ## Usage
 
 ### Training 
 
-Train the model using (takes roughly 1.5 hours per epoch with a batch size of 2 on an NVIDIA Tesla V100):
+Train the model using:
 
 ```python iSeeBetterTrain.py```
+
+(takes roughly 1.5 hours per epoch with a batch size of 2 on an NVIDIA Tesla V100 with 16GB VRAM)
 
 ### Testing
 
