@@ -62,7 +62,7 @@ if args.model_type == 'RBPN':
 if cuda:
     model = torch.nn.DataParallel(model, device_ids=gpus_list)
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda:0" if cuda and torch.cuda.is_available() else "cpu")
 
 if cuda:
     model = model.cuda(gpus_list[0])
