@@ -45,7 +45,7 @@ cuda = args.gpu_mode
 if cuda:
     print("Using GPU mode")
     if not torch.cuda.is_available():
-        raise Exception("No GPU found, please run without --cuda")
+        raise Exception("No GPU found, please run without --gpu_mode")
 
 torch.manual_seed(args.seed)
 if cuda:
