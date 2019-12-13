@@ -32,7 +32,7 @@ Amongst the plethora of fields that deep learning has impacted, super resolution
 So why did I chose this topic? I felt that I could use my newly minted DL chops to develop something interesting which might propel the state-of-the-art further in the process. 
 
 Lets start with a low-res video sequence. 
-The easiest way to super-resolve such an input low-res video is to apply super resolution to every single frame individiually. However, this would be wasteful of the temporal details inherent in video sequences, especially motion patterns.
+The easiest way to super-resolve such an input low-res video is to apply super resolution to every single frame individually. However, this would be wasteful of the temporal details inherent in video sequences, especially motion patterns.
 
 So I thought why not make my algorithm look left, look right - use details from adjacent images and train it with a GAN to extract fine-grained details such as complex textures.
 
