@@ -23,6 +23,29 @@ If you need to rebuild Pyflow, follow the instructions on the [Pyflow Git](https
 To load,
 ```pip3 install -r requirements.txt```
 
+## Elevator Pitch
+
+Deep learning has taken the world by storm! 
+
+Amongst the plethora of fields that deep learning has impacted, super resolution (which by definition is upscaling a low-res sample to a high-res sample) is one of them. 
+
+So why did I chose this topic? I felt that I could use my newly minted DL chops to develop something interesting which might propel the state-of-the-art further in the process. 
+
+Lets start with a low-res video sequence. 
+The easiest way to super-resolve such an input low-res video is to apply super resoplution to every single frame individiually. However, this would be wasteful of the temporal details inherent in video sequences, especially motion patterns.
+
+So I thought why not make my algorithm look left, look right - use details from adjacent images and train it with a GAN to extract fine-grained details such as complex textures.
+
+Presenting iSeeBetter, a novel spatio-temporal approach to video super resolution which uses as its generator a Recurrent Back-Projection Network (RBPN) to extract spatial and temporal information from the current and neighboring frames. 
+
+We use the discriminator within Super-Resolution Generative Adversarial Network (SRGAN) as our discriminator. 
+
+Now, as far as the loss function goes, using Mean Squared Error as a primary loss-minimization objective improves PSNR and SSIM which are important image quality metrics, but these metrics may not capture fine details in the image leading to misrepresentation of perceptual quality. 
+
+To address this, we use a four-fold loss function composed of adversarial loss, perceptual loss, MSE loss and Total-Variation loss. 
+
+Finally, with extensive experimentation, our results demonstrate that iSeeBetter offers superior VSR fidelity and surpasses state-of-the-art performance in the vast majority of SR cases.
+
 ## Overview
 
 Recently, learning-based models have enhanced the performance of Single-Image Super- Resolution (SISR). However, applying SISR successively to each video frame leads to lack of temporal coherency. On the other hand, Video Super Resolution (VSR) models based on Convolutional Neural Networks (CNNs) outperform traditional approaches in terms of image quality metrics such as Peak Signal to Noise Ratio (PSNR) and Structural SIMilarity (SSIM). However, Generative Adversarial Networks (GANs) offer a competitive advantage in terms of being able to mitigate the issue of lack of finer texture details when super-resolving at large upscaling factors which is usually seen with CNNs. We present iSeeBetter, a novel spatio-temporal approach to VSR. iSeeBetter seeks to render temporally consistent Super Resolution (SR) videos by extracting spatial and temporal information from the current and neighboring frames using the concept of Recurrent Back-Projection Networks (RBPN) as its generator. Further, to improve the "naturality" of the super-resolved image while eliminating artifacts seen with traditional algorithms, we utilize the discriminator from Super-Resolution Generative Adversarial Network (SRGAN). Mean Squared Error (MSE) as a primary loss-minimization objective improves PSNR and SSIM, but these metrics may not capture fine details in the image leading to misrepresentation of perceptual quality. To address this, we use a four-fold (adversarial, perceptual, MSE and Total-Variation (TV)) loss function. Our results demonstrate that iSeeBetter offers superior VSR fidelity and surpasses state-of-the-art performance. 
