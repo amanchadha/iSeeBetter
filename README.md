@@ -100,7 +100,7 @@ Model trained for 4 epochs included under ```weights/```
 
 Train the model using:
 
-```python iSeeBetterTrain.py```
+```python3 iSeeBetterTrain.py```
 
 (takes roughly 1.5 hours per epoch with a batch size of 2 on an NVIDIA Tesla V100 with 16GB VRAM)
 
@@ -108,7 +108,7 @@ Train the model using:
 
 To use the pre-trained model and test on a random video from within the dataset:
 
-```python iSeeBetterTest.py```
+```python3 iSeeBetterTest.py```
 
 ## Acknowledgements
 
