@@ -58,7 +58,7 @@ Recently, learning-based models have enhanced the performance of single-image su
 
 ## Model Architecture
 
-Figure 2 shows the iSeeBetter architecture which uses RBPN and SRGAN as its generator and discriminator respectively. RBPN has two approaches that extract missing details from different sources, namely SISR and MISR. Figure 3 shows the horizontal flow (blue arrows in Figure 2) that enlarges LR(t) using SISR. Figure 4 shows the vertical flow (red arrows in Figure 2) which is based on MISR that computes residual features from a pair of LR(t) to neighbor frames (LR(t−1), ..., LR(t−n) and the flow maps (F(t−1), ..., F(t−n)). At each projection step, RBPN observes the missing details from LR(t) and extracts residual features from neighboring frames to recover details. Within the projection models, RBPN utilizes a recurrent encoder-decoder mechanism for incorporating details extracted in SISR and MISR through back-projection.
+Figure 2 shows the iSeeBetter architecture that consists of and SRGAN  as its generator and discriminator respectively. RBPN has two approaches that extract missing details from different sources, namely SISR and MISR. Figure 3 shows the horizontal flow (represented by blue arrows in Fig. 2) that enlarges LR(t) using SISR. Figure 4 shows the vertical flow (represented by red arrows in Figure 2) which is based on MISR that computes residual features from a pair of LR(t) and its neighboring frames (LR(t−1), ..., LR(t−n) coupled with the pre-computed dense motion flow maps (F(t−1), ..., F(t−n)). At each projection step, RBPN observes the missing details from LR(t) and extracts residual features from neighboring frames to recover details. Within the projection models, RBPN utilizes a recurrent encoder-decoder mechanism for fusing details extracted from adjacent frames in SISR and MISR and incorporates them into the estimated frame SR(t) through back-projection. Once an SR frame is synthesized, it is sent over to the discriminator (shown in Figure 5) to validate its "authenticity". 
 
 ![ResNet_MISR](https://github.com/amanchadha/iSeeBetter/blob/master/images/ResNet_MISR.jpg)
 <p align="center">Figure 3: ResNet architecture for MISR that is composed of three tiles of five blocks where each block consists of two convolutional layers with 3 x 3 kernels, stride of 1 and padding of 1. The network uses Parametric ReLUs for its activations.</p>
@@ -90,9 +90,6 @@ We compared iSeeBetter with six state-of-the-art VSR algorithms: DBPN, B123 + T,
 
 ![results1](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res2.jpg)
 <p align="center">Table 3. PSNR/SSIM evaluation of state-of-the-art VSR algorithms using Vid4 for 4x. Bold numbers indicate best performance.</p>
-
-![results3](https://github.com/amanchadha/iSeeBetter/blob/master/images/Res3.jpg)
-<p align="center">Table 4. PSNR/SSIM evaluation of state-of-the-art VSR algorithms using Vimeo90K for 4x. Bold numbers indicate best performance.</p>
 
 ## Pretrained Model
 Model trained for 4 epochs included under ```weights/```
