@@ -50,7 +50,7 @@ Finally, with extensive experimentation, our results demonstrate that iSeeBetter
 
 Recently, learning-based models have enhanced the performance of single-image super-resolution (SISR). However, applying SISR successively to each video frame leads to a lack of temporal coherency. Convolutional neural networks (CNNs) outperform traditional approaches in terms of image quality metrics such as peak signal to noise ratio (PSNR) and structural similarity (SSIM). Generative adversarial networks (GANs) offer a competitive advantage by being able to mitigate the issue of a lack of finer texture details usually seen with CNNs when super-resolving at large upscaling factors. We present iSeeBetter, a novel GAN-based spatio-temporal approach to video super-resolution (VSR) that addresses these issues using recurrent generative back-projection networks. iSeeBetter seeks to render temporally consistent super-resolution videos by extracting spatial and temporal information from the current and neighboring frames using the concept of recurrent back-projection networks as its generator. Furthermore, to improve the "naturality" of the super-resolved image while eliminating artifacts seen with traditional algorithms, we utilize the discriminator from super-resolution generative adversarial network (SRGAN). Although mean squared error (MSE) as a primary loss-minimization objective improves PSNR/SSIM, these metrics may not capture fine details in the image resulting in misrepresentation of perceptual quality. To address this, we use a four-fold (adversarial, perceptual, MSE and total-variation (TV)) loss function. Our results demonstrate that iSeeBetter offers superior VSR fidelity and surpasses state-of-the-art performance. 
  
-![adjacent frame similarity](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_AFS.jpg)
+![adjacent frame similarity](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_AFS.png)
 <p align="center">Figure 1: Adjacent frame similarity</p>
  
 ![network arch](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_NNArch.jpg)
@@ -68,6 +68,9 @@ Figure 2 shows the iSeeBetter architecture which uses RBPN and SRGAN as its gene
 
 ![Disc](https://github.com/amanchadha/iSeeBetter/blob/master/images/Disc.jpg)
 <p align="center">Figure 5: Discriminator Architecture from SRGAN. The discriminator uses Leaky ReLUs for computing its activations.</p>
+
+![iSB_Loss](https://github.com/amanchadha/iSeeBetter/blob/master/images/iSeeBetter_Loss.png)
+<p align="center">Figure 6: The MSE, perceptual, adversarial, and TV loss components of the iSeeBetter loss function</p>
 
 ## Dataset
 
