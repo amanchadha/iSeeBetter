@@ -22,7 +22,7 @@ If you found our work interesting, please cite the work as:
 ```
 
 ```
-A. Chadha, J. Britto and M. M. Roja. iSeeBetter: Spatio-Temporal Video Super-Resolution using Recurrent Generative Back-Projection Networks. Springer Journal of Computational Visual Media, September 2020, Tsinghua University Press, 6(3):1–11, 2020.
+A. Chadha, J. Britto and M. M. Roja. iSeeBetter: Spatio-Temporal Video Super-Resolution using Recurrent Generative Back-Projection Networks. Springer Journal of Computational Visual Media, Tsinghua University Press, 6(3):1–11, 2020.
 ```
 
 ## Required Packages
