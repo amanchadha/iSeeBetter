@@ -9,7 +9,7 @@ Project for Stanford CS230: Deep Learning | [Paper](https://amanchadha.com/resea
 ## Citation
 If you found our work interesting, please cite the work as:
 ```
-@article{iSeeBetter2020Chadha,
+@article{Chadha2020iSeeBetter,
   title={iSeeBetter: Spatio-Temporal Video Super-Resolution using Recurrent Generative Back-Projection Networks},
   author={Chadha, Aman and Britto, John and Roja, Mani M.},
   journal={Journal of Computational Visual Media, September 2020, Tsinghua University Press},
