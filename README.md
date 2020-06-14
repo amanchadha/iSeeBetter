@@ -1,10 +1,27 @@
 # iSeeBetter: Spatio-Temporal Video Super Resolution using Recurrent-Generative Back-Projection Networks
 
-Project for Stanford CS230: Deep Learning
+Project for Stanford CS230: Deep Learning | [Paper](https://amanchadha.com/research/ChadhaBrittoRoja_iSeeBetterCVM.pdf)
 
 ```Python3 | PyTorch | GANs | CNNs | ResNets | RNNs```
 
 ![iSeeBetter_Poster](https://github.com/amanchadha/iSeeBetter/blob/master/AmanChadha_CS230_Poster.jpg)
+
+## Citation
+If you found this work interesting, cite the work as:
+```
+@article{iSeeBetter2020Chadha,
+  title={iSeeBetter: Spatio-Temporal Video Super-Resolution using Recurrent Generative Back-Projection Networks},
+  author={Chadha, Aman and Britto, John and Roja, Mani M.},
+  journal={Journal of Computational Visual Media, September 2020, Tsinghua University Press},
+  volume={6},
+  number={3},
+  pages={1-11},
+  year={2020},
+  publisher={Springer}
+}
+
+A. Chadha, J. Britto and M. M. Roja. iSeeBetter: Spatio-Temporal Video Super-Resolution using Recurrent Generative Back-Projection Networks. Springer Journal of Computational Visual Media, September 2020, Tsinghua University Press, 6(3):1–11, 2020.
+```
 
 ## Required Packages
 
@@ -115,9 +132,3 @@ To use the pre-trained model and test on a random video from within the dataset:
 Credits:
 - [SRGAN Implementation](https://github.com/leftthomas/SRGAN) by LeftThomas.
 - We used [RBPN-PyTorch](https://github.com/alterzero/RBPN-PyTorch) as a baseline for our Generator implementation.
-
-## Citation
-Cite the work as:
-```
-Publication WIP
-```
