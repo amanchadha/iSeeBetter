@@ -35,12 +35,24 @@ scikit-image==0.15.0
 tqdm==4.37.0
 ```
 
-Also needed is [Pyflow](https://github.com/pathak22/pyflow) which is a Python wrapper for [Ce Liu's C++ implementation](https://people.csail.mit.edu/celiu/OpticalFlow/) of Coarse2Fine Optical Flow.
-Pyflow binaries have been built for ubuntu and macOS and are available in the repository.
-If you need to rebuild Pyflow, follow the instructions on the [Pyflow Git](https://github.com/pathak22/pyflow) and do a ```cp pyflow*.so ..``` once you have built a shared object file on your target machine.
+Step 0: To load the required Python modules:
+```bash
+pip3 install -r requirements.txt
+```
 
-To load,
-```pip3 install -r requirements.txt```
+Also needed is [Pyflow](https://github.com/pathak22/pyflow) which is a Python wrapper for [Ce Liu's C++ implementation](https://people.csail.mit.edu/celiu/OpticalFlow/) of Coarse2Fine Optical Flow.
+Pyflow binaries that we used have been built for Ubuntu and macOS with Python 3.7 and are available in the repository.
+If you need to rebuild Pyflow, (i) simply follow the instructions below or (ii) refer to the [Pyflow Git](https://github.com/pathak22/pyflow)
+
+Step 1: Build Pyflow:
+```bash
+cd pyflow/
+python setup.py build_ext -i  # build pyflow
+python demo.py                # to make sure pyflow works
+cp pyflow*.so ..
+```
+
+Step 2: Train or test iSeeBetter using the instructions below.
 
 ## Elevator Pitch
 
