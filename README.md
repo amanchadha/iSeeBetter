@@ -52,7 +52,7 @@ python demo.py                # to make sure pyflow works
 cp pyflow*.so ..
 ```
 
-Step 2: Train or test iSeeBetter using the instructions below.
+Step 2: Train or test iSeeBetter using the instructions in the relevant sections below.
 
 ## Elevator Pitch
 
