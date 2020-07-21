@@ -1,6 +1,8 @@
 # iSeeBetter: Spatio-Temporal Video Super Resolution using Recurrent-Generative Back-Projection Networks
 
-Project for Stanford CS230: Deep Learning | **[Paper](https://amanchadha.com/research/ChadhaBrittoRoja_iSeeBetterCVM.pdf)**
+Project for Stanford CS230: Deep Learning 
+
+## **[SpringerLink](https://link.springer.com/article/10.1007/s41095-020-0175-7)** | **[arXiV](https://arxiv.org/abs/2006.11161)**
 
 ```Python3 | PyTorch | GANs | CNNs | ResNets | RNNs```
 
