@@ -2,7 +2,7 @@
 
 Project for Stanford CS230: Deep Learning 
 
-## **[SpringerLink](https://link.springer.com/article/10.1007/s41095-020-0175-7)** | **[arXiV](https://arxiv.org/abs/2006.11161)**
+### **[SpringerLink](https://link.springer.com/article/10.1007/s41095-020-0175-7)** | **[arXiV](https://arxiv.org/abs/2006.11161)**
 
 ```Python3 | PyTorch | GANs | CNNs | ResNets | RNNs```
 
