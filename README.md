@@ -17,7 +17,7 @@ If you found our work interesting, please cite the work as:
   journal={Springer Journal of Computational Visual Media, September 2020, Tsinghua University Press},
   volume={6},
   number={3},
-  pages={1-12},
+  pages={307-317},
   year={2020},
   publisher={Springer}
 }
