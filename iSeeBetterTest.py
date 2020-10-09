@@ -35,6 +35,7 @@ parser.add_argument('--future_frame', type=bool, default=True, help="Use future 
 parser.add_argument('--nFrames', type=int, default=7, help="")
 parser.add_argument('--model_type', type=str, default="RBPN", help="")
 parser.add_argument('-d', '--debug', action='store_true', required=False, help="Print debug spew.")
+parser.add_argument('-u', '--upscale_only', action='store_true', required=False, help="Upscale mode - without downscaling.")
 
 args = parser.parse_args()
 
@@ -80,7 +81,9 @@ def eval():
 
     model.eval()
     count = 0
-    avg_psnr_predicted = 0.0
+    upscale_only = args.upscale_only
+    if not upscale_only:
+        avg_psnr_predicted = 0.0
     for batch in testing_data_loader:
         input, target, neigbor, flow, bicubic = batch[0], batch[1], batch[2], batch[3], batch[4]
         
@@ -118,10 +121,10 @@ def eval():
         
         target = target.squeeze().numpy().astype(np.float32)
         target = target*255.
-                
-        psnr_predicted = PSNR(prediction, target, shave_border=args.upscale_factor)
-        print("PSNR Predicted = ", psnr_predicted)
-        avg_psnr_predicted += psnr_predicted
+        if not upscale_only:
+            psnr_predicted = PSNR(prediction, target, shave_border=args.upscale_factor)
+            print("PSNR Predicted = ", psnr_predicted)
+            avg_psnr_predicted += psnr_predicted
         count += 1
     
     print("Avg PSNR Predicted = ", avg_psnr_predicted/count)
