@@ -1,8 +1,10 @@
 # iSeeBetter: Spatio-Temporal Video Super Resolution using Recurrent-Generative Back-Projection Networks
 
-![Springer CVM](https://github.com/amanchadha/iSeeBetter/blob/master/spr.jpg)
 
-Project for Stanford CS230: Deep Learning 
+<a href="https://link.springer.com/article/10.1007/s41095-020-0175-7"><p align=center><img src="https://github.com/amanchadha/iSeeBetter/blob/master/spr.jpg"/></p></a>
+
+Project for Stanford CS230: Deep Learning. Published in **Springer Journal of Computational Visual Media, September 2020, Tsinghua University Press**.
+This is the official PyTorch implementation of our paper.
 
 ### PDF: **[SpringerLink](https://link.springer.com/article/10.1007/s41095-020-0175-7)** | **[arXiv](https://arxiv.org/abs/2006.11161)** | **[amanchadha.com](https://amanchadha.com/research/ChadhaBrittoRoja_iSeeBetterCVM.pdf)**
 
@@ -11,7 +13,7 @@ Project for Stanford CS230: Deep Learning
 ![iSeeBetter_Poster](https://github.com/amanchadha/iSeeBetter/blob/master/AmanChadha_CS230_Poster.jpg)
 
 ## Citation
-If you found our work interesting, please cite the work as:
+If you found our work interesting, please cite it as:
 ```
 @article{Chadha2020iSeeBetter,
   title={{i}{S}ee{B}etter: Spatio-Temporal Video Super-Resolution using Recurrent Generative Back-Projection Networks},
