@@ -16,6 +16,11 @@ This is the official PyTorch implementation of our paper.
 
 ---
 
+We’re #1 on the Video Super Resolution leaderboard on [PapersWithCode](https://paperswithcode.com/sota/video-question-answering-on-tvqa)!
+<a href="https://paperswithcode.com/sota/video-super-resolution-on-vid4-4x-upscaling"><p align=center><img src="https://github.com/amanchadha/iPerceive/blob/master/vid4.jpg" width="600px" height="400px"/></p></a>
+
+---
+
 ![iSeeBetter_Poster](https://github.com/amanchadha/iSeeBetter/blob/master/AmanChadha_CS230_Poster.jpg)
 
 ## Citation
