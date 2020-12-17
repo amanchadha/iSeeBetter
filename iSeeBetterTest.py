@@ -127,8 +127,8 @@ def eval():
             avg_psnr_predicted += psnr_predicted
         count += 1
         
-        if not upscale_only:  # Otherwise the print will error on '-u'
-            print("Avg PSNR Predicted = ", avg_psnr_predicted/count)
+    if not upscale_only:  # Otherwise the print will error on '-u'
+        print("Avg PSNR Predicted = ", avg_psnr_predicted/count)
 
 def save_img(img, img_name, pred_flag):
     save_img = img.squeeze().clamp(0, 1).numpy().transpose(1,2,0)
