@@ -50,6 +50,7 @@ pytorch-ssim==0.1
 numpy==1.16.4
 scikit-image==0.15.0
 tqdm==4.37.0
+opencv-python==4.5.1.48
 ```
 
 Step 0: To load the required Python modules:
