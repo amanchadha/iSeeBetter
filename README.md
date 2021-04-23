@@ -161,8 +161,7 @@ To use the pre-trained model and test on a random video from within the dataset:
 
 Use parameter ```--upscale_only``` to turn off initial downscaling.
 
-## Acknowledgements
+## Credits
 
-Credits:
 - [SRGAN Implementation](https://github.com/leftthomas/SRGAN) by LeftThomas.
 - We used [RBPN-PyTorch](https://github.com/alterzero/RBPN-PyTorch) as a baseline for our Generator implementation.
