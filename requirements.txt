@@ -1,6 +1,6 @@
 torch==1.13.1
 pytorch-ssim==0.1
-numpy==1.16.4
+numpy==1.22.0
 scikit-image==0.15.0
 tqdm==4.66.3
 opencv-python==4.5.1.48
