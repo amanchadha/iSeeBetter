@@ -1,4 +1,4 @@
-torch==1.13.1
+torch==2.4.0
 pytorch-ssim==0.1
 numpy==1.22.0
 scikit-image==0.15.0
